@@ -85,4 +85,5 @@ MODEL_API_KEY=你的DeepSeek密钥
 MODEL_API_BASE_URL=https://api.deepseek.com
 ```
 （可以使用自己的菜谱和模型api）
+
 中文菜谱接口来源：大米 API 菜谱查询（按每项原材料查询 `word`，再筛选同时包含全部原材料的结果，返回菜名、原料、调料和做法）。
