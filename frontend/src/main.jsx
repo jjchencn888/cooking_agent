@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './styles.css';
 
 function App() {
-  const [query, setQuery] = React.useState('番茄鸡蛋面');
+  const [query, setQuery] = React.useState('鸡蛋，番茄');
   const [result, setResult] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState('');
@@ -40,7 +40,7 @@ function App() {
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="输入菜名或食材，例如：番茄鸡蛋面"
+          placeholder="输入原材料，用逗号分隔，例如：鸡蛋，番茄"
         />
         <button onClick={searchRecipe} disabled={loading}>
           {loading ? '搜索中……' : '搜索菜谱'}

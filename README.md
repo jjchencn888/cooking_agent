@@ -39,7 +39,7 @@ This is an MVP skeleton with a demo data path by default. You can later connect 
 =======
 # 智能菜谱助手
 
-用户输入中文菜名或食材，后端通过中文菜谱 API 搜索，前端展示食材和烹饪步骤。
+用户输入一个或多个原材料，后端通过中文菜谱 API 查找同时包含所有原材料的菜品，前端展示食材和烹饪步骤。
 
 ## Structure
 
@@ -86,5 +86,5 @@ MODEL_API_KEY=你的DeepSeek密钥
 MODEL_API_BASE_URL=https://api.deepseek.com
 ```
 
-中文菜谱接口来源：大米 API 菜谱查询（输入 `word`，返回菜名、原料、调料和做法）。
+中文菜谱接口来源：大米 API 菜谱查询（按每项原材料查询 `word`，再筛选同时包含全部原材料的结果，返回菜名、原料、调料和做法）。
 >>>>>>> 81351ae (提交项目)
