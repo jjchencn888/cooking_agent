@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: cooking-agent-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: RECIPE_API_BASE_URL
+        value: https://api.qqsuu.cn/api/dm-caipu
+      - key: MODEL_API_BASE_URL
+        value: https://api.deepseek.com
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: RECIPE_API_KEY
+        sync: false
+      - key: MODEL_API_KEY
+        sync: false

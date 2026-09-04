@@ -2,31 +2,42 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './styles.css';
 
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+
 function App() {
   const [query, setQuery] = React.useState('鸡蛋，番茄');
   const [result, setResult] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState('');
 
-  const searchRecipe = async () => {
+  const searchRecipe = async (event) => {
+    event?.preventDefault();
+    const normalizedQuery = query.trim();
+    if (!normalizedQuery) {
+      setError('请输入至少一种原材料。');
+      setResult(null);
+      return;
+    }
+
     setLoading(true);
     setError('');
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/search', {
+      const response = await fetch(`${API_BASE_URL}/api/search`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify({ query: normalizedQuery }),
       });
 
       if (!response.ok) {
-        throw new Error('搜索失败');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || '搜索失败，请稍后重试。');
       }
 
       const data = await response.json();
       setResult(data);
     } catch (err) {
-      setError(err.message || '请求失败，请确认后端服务已经启动。');
+      setError(err.message || '暂时无法连接菜谱服务，请稍后重试。');
       setResult(null);
     } finally {
       setLoading(false);
@@ -36,15 +47,23 @@ function App() {
   return (
     <div className="app-shell">
       <h1>智能菜谱助手</h1>
-      <div className="search-box">
+      <form className="search-box" onSubmit={searchRecipe}>
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="输入原材料，用逗号分隔，例如：鸡蛋，番茄"
         />
-        <button onClick={searchRecipe} disabled={loading}>
+        <button type="submit" disabled={loading || !query.trim()}>
           {loading ? '搜索中……' : '搜索菜谱'}
         </button>
+      </form>
+      <div className="demo-examples" aria-label="演示样例">
+        <span>试试：</span>
+        {['番茄，鸡蛋', '土豆，青椒', '黄瓜，鸡蛋'].map((example) => (
+          <button type="button" key={example} onClick={() => setQuery(example)}>
+            {example}
+          </button>
+        ))}
       </div>
 
       {error && <div className="error-box">{error}</div>}

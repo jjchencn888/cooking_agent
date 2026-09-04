@@ -7,12 +7,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from app.services.recipe_service import search_recipes
+from app.core.config import get_settings
+from app.services.recipe_service import RecipeAPIError
 
-app = FastAPI(title="Cooking Agent API", version="0.1.0")
+settings = get_settings()
+app = FastAPI(title="智能菜谱助手 API", version="0.2.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings["allowed_origins"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -42,7 +45,10 @@ async def search_recipe(payload: SearchRequest) -> dict:
     if not query:
         raise HTTPException(status_code=400, detail="查询内容不能为空")
 
-    results = await search_recipes(query)
+    try:
+        results = await search_recipes(query)
+    except RecipeAPIError:
+        raise HTTPException(status_code=503, detail="菜谱服务暂时不可用，请稍后重试")
     if not results:
         return {
             "query": query,
